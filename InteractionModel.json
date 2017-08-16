@@ -1,0 +1,412 @@
+{
+  "intents": [
+    {
+      "name": "AMAZON.CancelIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.HelpIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.NoIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.StopIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.YesIntent",
+      "samples": []
+    },
+    {
+      "name": "Chicago",
+      "samples": [
+        "Chicago",
+        "for Chicago",
+        "tell me about Chicago",
+        "how many games back is Chicago",
+        "what place is Chicago in"
+      ],
+      "slots": []
+    },
+    {
+      "name": "GetGamesBack",
+      "samples": [
+        "for the {Team}",
+        "how many games back are the {Team}",
+        "what place are the {Team}",
+        "{Team}"
+      ],
+      "slots": [
+        {
+          "name": "Team",
+          "type": "MLBTeam",
+          "samples": []
+        }
+      ]
+    },
+    {
+      "name": "LosAngeles",
+      "samples": [
+        "Los Angeles",
+        "for Los Angeles",
+        "what place is Los Angeles in",
+        "how many games back is Los Angeles",
+        "tell me about Los Angeles"
+      ],
+      "slots": []
+    },
+    {
+      "name": "NewYork",
+      "samples": [
+        "for New York",
+        "New York",
+        "tell me about New York",
+        "what place is New York in",
+        "how many games back is New York"
+      ],
+      "slots": []
+    },
+    {
+      "name": "Socks",
+      "samples": [
+        "socks",
+        "sox",
+        "the sox",
+        "the socks"
+      ],
+      "slots": []
+    }
+  ],
+  "types": [
+    {
+      "name": "MLBTeam",
+      "values": [
+        {
+          "id": "",
+          "name": {
+            "value": "Indians",
+            "synonyms": [
+              "Tribe",
+              "Windians",
+              "Cleveland",
+              "Cleveland Indians"
+            ]
+          }
+        },
+        {
+          "id": "",
+          "name": {
+            "value": "Red Sox",
+            "synonyms": [
+              "Boston",
+              "Beantown",
+              "Boston Red Sox"
+            ]
+          }
+        },
+        {
+          "id": "",
+          "name": {
+            "value": "Rays",
+            "synonyms": [
+              "Devil Rays",
+              "Tampa Bay",
+              "Tampa Bay Rays",
+              "Tampa Bay Devil Rays"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Yankees",
+            "synonyms": [
+              "New York Yankees",
+              "Yanks"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Orioles",
+            "synonyms": [
+              "Baltimore",
+              "Baltimore Orioles"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Blue Jays",
+            "synonyms": [
+              "Toronto",
+              "Toronto Blue Jays"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Twins",
+            "synonyms": [
+              "Minnesota",
+              "Minnesota Twins"
+            ]
+          }
+        },
+        {
+          "id": "",
+          "name": {
+            "value": "Royals",
+            "synonyms": [
+              "KC Royals",
+              "Kansas City",
+              "Kansas City Royals"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Tigers",
+            "synonyms": [
+              "Detroit Tigers",
+              "Detroit"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "White Sox",
+            "synonyms": [
+              "Chicago White Sox",
+              "Chicago Sox"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Astros",
+            "synonyms": [
+              "Houston",
+              "Houston Astros"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Mariners",
+            "synonyms": [
+              "Seattle",
+              "Seattle Mariners"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Rangers",
+            "synonyms": [
+              "Texas",
+              "Texas Rangers"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Angels",
+            "synonyms": [
+              "Los Angeles Angels",
+              "LA Angels",
+              "Anaheim Angels"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Athletics",
+            "synonyms": [
+              "As",
+              "Oakland",
+              "Oakland Athletics",
+              "Oakland As"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Nationals",
+            "synonyms": [
+              "Nats",
+              "Washington Nationals",
+              "Washington"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Braves",
+            "synonyms": [
+              "Atlanta",
+              "Atlanta Braves"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Marlins",
+            "synonyms": [
+              "Miami",
+              "Florida",
+              "Miami Marlins",
+              "Florida Marlins",
+              "Fish"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Mets",
+            "synonyms": [
+              "Metropolitans",
+              "New York Mets"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Phillies",
+            "synonyms": [
+              "Phils",
+              "Philly",
+              "Philadelphia",
+              "Philadelphia Phillies"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Brewers",
+            "synonyms": [
+              "Brew Crew",
+              "Milwaukee",
+              "Milwaukee Brewers"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Cubs",
+            "synonyms": [
+              "Cubbies",
+              "Chicago Cubs"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Cardinals",
+            "synonyms": [
+              "Red Birds",
+              "Saint Louis",
+              "Saint Louis Cardinals",
+              "Cards"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Pirates",
+            "synonyms": [
+              "Rats",
+              "Pittsburgh",
+              "Pittsburgh Pirates"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Reds",
+            "synonyms": [
+              "Redlegs",
+              "Cincinnati",
+              "Cincinnati Reds"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Dodgers",
+            "synonyms": [
+              "LA Dodgers",
+              "Los Angeles Dodgers"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Diamondbacks",
+            "synonyms": [
+              "DBacks",
+              "Arizona",
+              "Arizona Diamondbacks",
+              "Arizona DBacks"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Rockies",
+            "synonyms": [
+              "Colorado",
+              "Colorado Rockies"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Padres",
+            "synonyms": [
+              "San Diego",
+              "San Diego Padres"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "Giants",
+            "synonyms": [
+              "San Francisco",
+              "San Francisco Giants"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
