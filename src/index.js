@@ -19,46 +19,88 @@ const handlers = {
     },
     
     "GetGamesBack": function () {
-        console.log("FULL REQUEST = " + JSON.stringify(this.event.request));
-        if (this.event.request.intent.slots.Team.resolutions.resolutionsPerAuthority[0].status.code === "ER_SUCCESS_MATCH")
+        console.log("FULL REQUEST = " + JSON.stringify(this.event));
+
+        var failFlag = false;
+        if (this.event.request.intent === undefined) failFlag = true;
+        else if (this.event.request.intent.slots === undefined) failFlag = true;
+        else if (this.event.request.intent.slots.Team === undefined) failFlag = true;
+        else if (this.event.request.intent.slots.Team.value === undefined) failFlag = true;
+        else if (this.event.request.intent.slots.Team.resolutions === undefined) failFlag = true;
+        else if (this.event.request.intent.slots.Team.resolutions.resolutionsPerAuthority[0].status.code != "ER_SUCCESS_MATCH") failFlag = true;
+        
+        if (failFlag && (this.event.request.token != undefined)) failFlag = false;
+
+        if (!failFlag)
         {
-            var slotvalue = this.event.request.intent.slots.Team.resolutions.resolutionsPerAuthority[0].values[0].value.name;
+            var slotvalue = "";
+            
+            if (this.event.request.intent != undefined)
+            {
+                slotvalue = this.event.request.intent.slots.Team.resolutions.resolutionsPerAuthority[0].values[0].value.name;
+            }
+            else
+            {
+                slotvalue = this.event.request.token;
+            }
+            
             console.log("SLOT VALUE: " + slotvalue);
             if (slotvalue !== undefined)
             {
                 var teamname = slotvalue;
+                var secondPlace = "";
                 httpsGet(slotvalue,  (result) => {
+                    console.log("FULL RESULTS = " + JSON.stringify(result));
                     var userTeam = result.standing.find((team) => { return team.last_name.toLowerCase() === teamname.toLowerCase() });
+                    
+                    var teamConference = result.standing.filter((team) => { return team.conference.toLowerCase() === userTeam.conference.toLowerCase(); });
+                    console.log("CONFERENCE TEAMS = " + JSON.stringify(teamConference));
+                    var teamDivision = teamConference.filter((team) => { return team.division.toLowerCase() === userTeam.division.toLowerCase(); });
+                    console.log("DIVISION TEAMS = " + JSON.stringify(teamDivision));
+                    if (userTeam.rank === 1)
+                    {
+                        secondPlace = teamDivision.find((team) => { return team.rank === 2 });
+                        console.log("SECOND PLACE TEAM = " + JSON.stringify(secondPlace));
+                    }                    
+                    
                     console.log(userTeam);
-                    var response = getResponse(userTeam);
+                    var response = getResponse(userTeam, secondPlace);
                     console.log(getRandomQuestion);
                     this.response.speak(response + getRandomQuestion()).listen(getRandomQuestion());
                     
                     if (this.event.context.System.device.supportedInterfaces.Display)
                     {
-                        
                         const makeTextContent = Alexa.utils.TextUtils.makeTextContent;
+                        const makePlainText = Alexa.utils.TextUtils.makePlainText;
+                        const makeRichText = Alexa.utils.TextUtils.makeRichText;
                         const makeImage = Alexa.utils.ImageUtils.makeImage;
                         
+                        var backgroundImage = makeImage("https://m.media-amazon.com/images/G/01/jeffblankenburg/skills/gamesback/mlb/" + getLeague(userTeam.conference.toUpperCase()).toLowerCase().replace(" ", "-") + "._TTH_.png");
                         
                         var builder = new Alexa.templateBuilders.ListTemplate1Builder();
-                        var image = makeImage("https://github.com/jeffblankenburg/GamesBack/blob/master/art/mlb/cleveland-indians.png", 88, 88, "X_SMALL", "Cleveland Indians Logo");
-                        var textContent = makeTextContent("Primary", "Secondary", "Tertiary");
-                        var teams = [{"token": "INDIANS", "image": image, "textContent": textContent},
-                                     {"token": "TWINS", "image": image, "textContent": textContent},
-                                     {"token": "ROYALS", "image": image, "textContent": textContent},
-                                     {"token": "TIGERS", "image": image, "textContent": textContent},
-                                     {"token": "WHITE SOX", "image": image, "textContent": textContent}];
-                        let standingsTemplate = builder.setTitle("AMERICAN LEAGUE CENTRAL STANDINGS").setListItems(teams).build();
-console.log(JSON.stringify(standingsTemplate));
-                        //this.response.renderTemplate(standingsTemplate);
+
+                        var teams = [];
+                        for (var i = 0; i< teamDivision.length; i++)
+                        {
+                            var token = teamDivision[i].first_name + " " + teamDivision[i].last_name;
+                            var image = makeImage("https://m.media-amazon.com/images/G/01/jeffblankenburg/skills/gamesback/mlb/" + teamDivision[i].first_name.toLowerCase().replace(" ", "-") + "-" + teamDivision[i].last_name.toLowerCase().replace(" ", "-") + "._TTH_.png", 50, 50, "X_SMALL", token + " Logo");
+                            var primaryText = "<font size='4'>" + token + "</font>";
+                            var secondaryText = teamDivision[i].won + " - " + teamDivision[i].lost + "  |  " + (teamDivision[i].won/(teamDivision[i].won + teamDivision[i].lost)).toFixed(3).toString().replace("0.", ".") + "  |  STRK: " + teamDivision[i].streak + "  |  L10: " + teamDivision[i].last_ten.replace("-", " - ");
+                            var tertiaryText = teamDivision[i].games_back;
+                            if (tertiaryText === 0) tertiaryText = "-";
+                            var textContent = makeTextContent(makeRichText(primaryText), makePlainText(secondaryText), makePlainText(tertiaryText));
+                            var newTeam = {"token": teamDivision[i].last_name.toUpperCase(), "image": image, "textContent": textContent};
+                            console.log("NEW TEAM = " + JSON.stringify(newTeam));
+                            teams.push(newTeam);
+                        }
+
+                        let standingsTemplate = builder.setTitle(getLeague(userTeam.conference.toUpperCase()).toUpperCase() + " " + getDivision(userTeam.division.toUpperCase()).toUpperCase() + " STANDINGS").setToken("STANDINGS").setBackgroundImage(backgroundImage).setListItems(teams).build();
+                        console.log("STANDINGS TEMPLATE = " + JSON.stringify(standingsTemplate));
+                        this.response.renderTemplate(standingsTemplate);
                         
                     }
-                    //else
-                   // {
-                        this.response.cardRenderer("CLEVELAND INDIANS", response);
-                    //}
-
+                    var cardImage = {smallImageUrl: "https://m.media-amazon.com/images/G/01/jeffblankenburg/skills/gamesback/mlb/" + userTeam.first_name.toLowerCase().replace(" ", "-") + "-" + userTeam.last_name.toLowerCase().replace(" ", "-") + "._TTH_.png", largeImageUrl: "https://m.media-amazon.com/images/G/01/jeffblankenburg/skills/gamesback/mlb/" + userTeam.first_name.toLowerCase().replace(" ", "-") + "-" + userTeam.last_name.toLowerCase().replace(" ", "-") + "._TTH_.png"}
+                    this.response.cardRenderer(userTeam.first_name + " " + userTeam.last_name, response, cardImage);
                     this.emit(":responseReady");
                 }
                 );
@@ -104,7 +146,13 @@ console.log(JSON.stringify(standingsTemplate));
     'AMAZON.StopIntent': function () {
         this.emit(':tell', "Goodbye.");
     },
+    "ElementSelected": function () {
+        console.log("DISPLAY.ELEMENTSELECTED INTENT!")
+        this.emitWithState("GetGamesBack");
+        //this.emit(":tell", "Display Dot Element Selected Intent!  Good job, Jeff!");
+    },
     "Unhandled": function() {
+        console.log("UNHANDLED!");
         console.log("THIS.EVENT = " + JSON.stringify(this.event));
         this.emit(":tell", "Goodbye.");
     }
@@ -117,10 +165,17 @@ exports.handler = function (event, context) {
     alexa.execute();
 };
 
-function getResponse(data)
+function getResponse(data, secondPlace)
 {
-    if (data.games_back > 0) return "The " + data.first_name + " " + data.last_name + " are " + data.games_back.toString().replace(".5", " and a half") + " games back in the " + getLeague(data.conference) + " " + getDivision(data.division) + ". They are in " + data.ordinal_rank + " place, with a record of " + data.won + " and " + data.lost + ". ";
-    else return "The " + data.first_name + " " + data.last_name + " are currently in first place in the " + getLeague(data.conference) + " " + getDivision(data.division) + ", with a record of " + data.won + " and " + data.lost + ". ";
+    if (data.games_back > 0) return "The " + data.first_name + " " + data.last_name + " are " + formatGamesBack(data.games_back) + " in the " + getLeague(data.conference) + " " + getDivision(data.division) + ". They are in " + data.ordinal_rank + " place, with a record of " + data.won + " and " + data.lost + ". ";
+    else return "The " + data.first_name + " " + data.last_name + " are currently in first place in the " + getLeague(data.conference) + " " + getDivision(data.division) + ", with a record of " + data.won + " and " + data.lost + ". The " + secondPlace.first_name + " " + secondPlace.last_name + " are " + formatGamesBack(secondPlace.games_back) + ", in second place. ";
+}
+
+function formatGamesBack(gamesBack)
+{
+    if (gamesBack === 0.5) return "a half game back";
+    else if (gamesBack.toString().includes(".5")) return gamesBack.toString().replace(".5", " and a half games back");
+    else return gamesBack + " games back";
 }
 
 function getRandomQuestion()
@@ -137,6 +192,7 @@ function getRandom(min, max)
 
 function getLeague(league)
 {
+    console.log("LEAGUE = " + league);
     if (league === "AL") return "American League";
     else return "National League";
 }
