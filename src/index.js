@@ -32,7 +32,23 @@ const handlers = {
                     console.log(userTeam);
                     var response = getResponse(userTeam);
                     console.log(getRandomQuestion);
-                    this.emit(":ask", response + getRandomQuestion(), getRandomQuestion());
+                    this.response.speak(response + getRandomQuestion()).listen(getRandomQuestion());
+                    
+                    if (this.event.context.System.device.supportedInterfaces.Display)
+                    {
+                        var builder = new Alexa.templateBuilders.ListTemplate1Builder();
+                        builder.setTitle("AMERICAN LEAGUE CENTRAL STANDINGS");
+                        var teams = ["Indians", "Twins", "Royals", "Tigers", "White Sox"];
+                        builder.setListItems(teams);
+                        builder.build();
+                        this.response.renderTemplate(builder);
+                    }
+                    //else
+                   // {
+                        this.response.cardRenderer("CLEVELAND INDIANS", response);
+                    //}
+
+                    this.emit(":responseReady");
                 }
                 );
             }
@@ -77,6 +93,10 @@ const handlers = {
     'AMAZON.StopIntent': function () {
         this.emit(':tell', "Goodbye.");
     },
+    "Unhandled": function() {
+        console.log("THIS.EVENT = " + JSON.stringify(this.event));
+        this.emit(":tell", "Goodbye.");
+    }
 };
 
 exports.handler = function (event, context) {
