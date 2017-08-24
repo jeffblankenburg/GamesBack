@@ -36,12 +36,23 @@ const handlers = {
                     
                     if (this.event.context.System.device.supportedInterfaces.Display)
                     {
+                        
+                        const makeTextContent = Alexa.utils.TextUtils.makeTextContent;
+                        const makeImage = Alexa.utils.ImageUtils.makeImage;
+                        
+                        
                         var builder = new Alexa.templateBuilders.ListTemplate1Builder();
-                        builder.setTitle("AMERICAN LEAGUE CENTRAL STANDINGS");
-                        var teams = ["Indians", "Twins", "Royals", "Tigers", "White Sox"];
-                        builder.setListItems(teams);
-                        builder.build();
-                        this.response.renderTemplate(builder);
+                        var image = makeImage("https://github.com/jeffblankenburg/GamesBack/blob/master/art/mlb/cleveland-indians.png", 88, 88, "X_SMALL", "Cleveland Indians Logo");
+                        var textContent = makeTextContent("Primary", "Secondary", "Tertiary");
+                        var teams = [{"token": "INDIANS", "image": image, "textContent": textContent},
+                                     {"token": "TWINS", "image": image, "textContent": textContent},
+                                     {"token": "ROYALS", "image": image, "textContent": textContent},
+                                     {"token": "TIGERS", "image": image, "textContent": textContent},
+                                     {"token": "WHITE SOX", "image": image, "textContent": textContent}];
+                        let standingsTemplate = builder.setTitle("AMERICAN LEAGUE CENTRAL STANDINGS").setListItems(teams).build();
+console.log(JSON.stringify(standingsTemplate));
+                        //this.response.renderTemplate(standingsTemplate);
+                        
                     }
                     //else
                    // {
