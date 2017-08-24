@@ -6,8 +6,8 @@ var util = require('util');
 var APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
 
 var config = {
-    "access_token" : "I got my access token at erikberg.com, and you can too!",
-    "user_agent_contact" : "-----@-----.com",
+    "access_token" : "de1dfb9b-bbba-409e-a4ba-47e42458751c",
+    "user_agent_contact" : "erikberg@jeffblankenburg.com",
     "time_zone" : "America/New_York",
     "version" : "1.0"
 };
@@ -118,7 +118,6 @@ function getDivision(division)
 }
 
 function httpsGet(myData, callback) {
-
     var options = {
         host: "erikberg.com",
         port: 443,
@@ -141,8 +140,6 @@ function httpsGet(myData, callback) {
             var data = JSON.parse(returnData);
             callback(data);
         });
-
     });
     req.end();
-
 }
