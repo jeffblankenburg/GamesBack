@@ -27,13 +27,6 @@ const handlers = {
             
             var builder = new Alexa.templateBuilders.BodyTemplate1Builder();
             var backgroundImage = makeImage("https://m.media-amazon.com/images/G/01/jeffblankenburg/skills/gamesback/mlb/major-league-baseball-background._TTH_.png");
-/*
-            var teamList = "";
-            for (var i = 0; i < 145; i++)
-            {
-                teamList += "<img src='http://bit.ly/GB-RED' width='5' height='1'/>";
-            }
-*/
 
             var divisionArray = [[], [], [], [], [], []];
             var divisionSymbol = "C";
@@ -51,7 +44,6 @@ const handlers = {
                     }
                     divisionArray[divisionCounter][placeCounter] = result.standing[i];
                     placeCounter++;
-                    //+= "<action token='" + result.standing[i].last_name.toUpperCase().replace(" ", "ZZZ") + "'><img src='http://bit.ly/MLB-" + getAbbreviation("MLB", result.standing[i].last_name) + "' width='88' height='88'/></action>";
                 }
 
                 var ALCENTRAL = divisionArray[0];
@@ -73,22 +65,18 @@ const handlers = {
                     for (var j = 0; j <= 5; j++)
                     {
                         teamList += "<action token='" + divisionArray[j][i].last_name.toUpperCase().replace(" ", "ZZZ") + "'><img src='http://bit.ly/MLB-" + getAbbreviation("MLB", divisionArray[j][i].last_name) + "' width='88' height='88'/></action>";
-                        //teamList += "<img src='https://m.media-amazon.com/images/G/01/jeffblankenburg/skills/gamesback/numbers/4.0._V517298332_.png' width='55' height='88'/>";
                         teamList += "<img src='https://m.media-amazon.com/images/G/01/jeffblankenburg/skills/gamesback/numbers/" + divisionArray[j][i].games_back.toFixed(1) + "._TTH_.png' width='55' height='88'/>";
                     }
                     teamList += "<br/>"
                 }
 
-
-                //var teamList = divisionArray[1] + spacer + divisionArray[4] + "<br/>" + divisionArray[0] + spacer + divisionArray[3] + "<br/>" + divisionArray[2] + spacer + divisionArray[5];
-   
                 let teamsTemplate = builder.setTitle("MAJOR LEAGUE BASEBALL").setToken("MLB").setBackgroundImage(backgroundImage).setTextContent(makeRichText(teamList)).build();
                 this.response.renderTemplate(teamsTemplate);
                 console.log("STANDINGS TEMPLATE = " + JSON.stringify(teamsTemplate));
                 this.emit(":responseReady");
             });
             
-            //var teamList = "<action token='ORIOLES'><img src='http://bit.ly/MLB-BAL' width='88' height='88'/></action><action token='REDZZZSOX'><img src='http://bit.ly/MLB-BOS' width='88' height='88'/></action><action token='WHITEZZZSOX'><img src='http://bit.ly/MLB-CHW' width='88' height='88'/></action><action token='INDIANS'><img src='http://bit.ly/MLB-CLE' width='88' height='88'/></action><action token='TIGERS'><img src='http://bit.ly/MLB-DET' width='88' height='88'/></action><action token='ASTROS'><img src='http://bit.ly/MLB-HOU' width='88' height='88'/></action><action token='ROYALS'><img src='http://bit.ly/MLB-KCR' width='88' height='88' alt='KANSAS CITY ROYALS' /></action><action token='ANGELS'><img src='http://bit.ly/MLB-LAA' width='88' height='88' alt='LOS ANGELES ANGELS' /></action><action token='TWINS'><img src='http://bit.ly/MLB-MIN' width='88' height='88' alt='MINNESOTA TWINS' /></action><action token='YANKEES'><img src='http://bit.ly/MLB-NYYan' width='88' height='88' alt='NEW YORK YANKEES' /></action><action token='ATHLETICS'><img src='http://bit.ly/MLB-OAK' width='88' height='88' alt='OAKLAND ATHLETICS' /></action><action token='MARINERS'><img src='http://bit.ly/MLB-SEA' width='88' height='88' alt='SEATTLE MARINERS' /></action><action token='RAYS'><img src='http://bit.ly/MLB-TBR' width='88' height='88' alt='TAMPA BAY RAYS' /></action><action token='RANGERS'><img src='http://bit.ly/MLB-TEX' width='88' height='88' alt='TEXAS RANGERS' /></action><action token='BLUEZZZJAYS'><img src='http://bit.ly/MLB-TOR' width='88' height='88' alt='TORONTO BLUE JAYS' /></action><br/><br/><action token='DIAMONDBACKS'><img src='http://bit.ly/MLB-ARI' width='88' height='88' alt='ARIZONA DIAMONDBACKS' /></action><action token='BRAVES'><img src='http://bit.ly/MLB-ATL' width='88' height='88' alt='ATLANTA BRAVES' /></action><action token='CUBS'><img src='http://bit.ly/MLB-CHCu' width='88' height='88' alt='CHICAGO CUBS' /></action><action token='REDS'><img src='http://bit.ly/MLB-CIN' width='88' height='88' alt='CINCINNATI REDS' /></action><action token='ROCKIES'><img src='http://bit.ly/MLB-COL' width='88' height='88' alt='COLORADO ROCKIES' /></action><action token='DODGERS'><img src='http://bit.ly/MLB-LAD' width='88' height='88' alt='LOS ANGELES DODGERS' /></action><action token='MARLINS'><img src='http://bit.ly/MLB-MIA' width='88' height='88' alt='MIAMI MARLINS' /></action><action token='BREWERS'><img src='http://bit.ly/MLB-MIL' width='88' height='88' alt='MILWAUKEE BREWERS' /></action><action token='METS'><img src='http://bit.ly/MLB-NYM' width='88' height='88' alt='NEW YORK METS' /></action><action token='PHILLIES'><img src='http://bit.ly/MLB-PHI' width='88' height='88' alt='PHILADELPHIA PHILLIES' /></action><action token='PIRATES'><img src='http://bit.ly/MLB-PIT' width='88' height='88' alt='PITTSBURGH PIRATES' /></action><action token='PADRES'><img src='http://bit.ly/MLB-SDP' width='88' height='88' alt='SAN DIEGO PADRES' /></action><action token='GIANTS'><img src='http://bit.ly/MLB-SFG' width='88' height='88' alt='SAN FRANCISCO GIANTS' /></action><action token='CARDINALS'><img src='http://bit.ly/MLB-STL' width='88' height='88' alt='SAINT LOUIS CARDINALS' /></action><action token='NATIONALS'><img src='http://bit.ly/MLB-WAS' width='88' height='88' alt='WASHINGTON NATIONALS' /></action>";
+            //var teamList = "<action token='ORIOLES'><img src='http://bit.ly/MLB-BAL' width='88' height='88'/></action><action token='REDZZZSOX'><img src='http://bit.ly/MLB-BOS' width='88' height='88'/></action><action token='WHITEZZZSOX'><img src='http://bit.ly/MLB-CHW' width='88' height='88'/></action><action token='INDIANS'><img src='http://bit.ly/MLB-CLE' width='88' height='88'/></action><action token='TIGERS'><img src='http://bit.ly/MLB-DET' width='88' height='88'/></action><action token='ASTROS'><img src='http://bit.ly/MLB-HOU' width='88' height='88'/></action><action token='ROYALS'><img src='http://bit.ly/MLB-KCR' width='88' height='88'/></action><action token='ANGELS'><img src='http://bit.ly/MLB-LAA' width='88' height='88'/></action><action token='TWINS'><img src='http://bit.ly/MLB-MIN' width='88' height='88'/></action><action token='YANKEES'><img src='http://bit.ly/MLB-NYYan' width='88' height='88'/></action><action token='ATHLETICS'><img src='http://bit.ly/MLB-OAK' width='88' height='88'/></action><action token='MARINERS'><img src='http://bit.ly/MLB-SEA' width='88' height='88'/></action><action token='RAYS'><img src='http://bit.ly/MLB-TBR' width='88' height='88'/></action><action token='RANGERS'><img src='http://bit.ly/MLB-TEX' width='88' height='88'/></action><action token='BLUEZZZJAYS'><img src='http://bit.ly/MLB-TOR' width='88' height='88'/></action><br/><br/><action token='DIAMONDBACKS'><img src='http://bit.ly/MLB-ARI' width='88' height='88'/></action><action token='BRAVES'><img src='http://bit.ly/MLB-ATL' width='88' height='88'/></action><action token='CUBS'><img src='http://bit.ly/MLB-CHCu' width='88' height='88'/></action><action token='REDS'><img src='http://bit.ly/MLB-CIN' width='88' height='88'/></action><action token='ROCKIES'><img src='http://bit.ly/MLB-COL' width='88' height='88'/></action><action token='DODGERS'><img src='http://bit.ly/MLB-LAD' width='88' height='88'/></action><action token='MARLINS'><img src='http://bit.ly/MLB-MIA' width='88' height='88'/></action><action token='BREWERS'><img src='http://bit.ly/MLB-MIL' width='88' height='88'/></action><action token='METS'><img src='http://bit.ly/MLB-NYM' width='88' height='88'/></action><action token='PHILLIES'><img src='http://bit.ly/MLB-PHI' width='88' height='88'/></action><action token='PIRATES'><img src='http://bit.ly/MLB-PIT' width='88' height='88'/></action><action token='PADRES'><img src='http://bit.ly/MLB-SDP' width='88' height='88'/></action><action token='GIANTS'><img src='http://bit.ly/MLB-SFG' width='88' height='88'/></action><action token='CARDINALS'><img src='http://bit.ly/MLB-STL' width='88' height='88'/></action><action token='NATIONALS'><img src='http://bit.ly/MLB-WAS' width='88' height='88'/></action>";
             
         }
         else
@@ -223,7 +211,6 @@ const handlers = {
     "ElementSelected": function () {
         console.log("DISPLAY.ELEMENTSELECTED INTENT!")
         this.emitWithState("GetGamesBack");
-        //this.emit(":tell", "Display Dot Element Selected Intent!  Good job, Jeff!");
     },
     "SessionEndedRequest": function() {
         console.log("SESSION ENDED REQUEST!");
