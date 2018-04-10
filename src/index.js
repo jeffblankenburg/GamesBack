@@ -127,6 +127,7 @@ const handlers = {
                     if (userTeam.rank === 1)
                     {
                         secondPlace = teamDivision.find((team) => { return team.rank === 2 });
+                        if (secondPlace == undefined) secondPlace = teamDivision.find((team) => { return team.rank === 1 && team.last_name.toLowerCase() != teamname.toLowerCase() });
                         console.log("SECOND PLACE TEAM = " + JSON.stringify(secondPlace));
                     }                    
                     
@@ -162,7 +163,7 @@ const handlers = {
                         
                     }
                     var cardImage = {smallImageUrl: "https://m.media-amazon.com/images/G/01/jeffblankenburg/skills/gamesback/mlb/" + userTeam.first_name.toLowerCase().replace(" ", "-") + "-" + userTeam.last_name.toLowerCase().replace(" ", "-") + "._TTH_.png", largeImageUrl: "https://m.media-amazon.com/images/G/01/jeffblankenburg/skills/gamesback/mlb/" + userTeam.first_name.toLowerCase().replace(" ", "-") + "-" + userTeam.last_name.toLowerCase().replace(" ", "-") + "._TTH_.png"}
-                    this.response.cardRenderer(userTeam.first_name + " " + userTeam.last_name, response, cardImage);
+                    this.response.cardRenderer(userTeam.first_name + " " + userTeam.last_name, response);
                     this.emit(":responseReady");
                 }
                 );
@@ -233,14 +234,23 @@ exports.handler = function (event, context) {
 
 function getResponse(data, secondPlace)
 {
+    console.log("DATA = " + JSON.stringify(data));
+    console.log("SECONDPLACE = " + JSON.stringify(secondPlace));
     if (data.games_back > 0) return "The " + data.first_name + " " + data.last_name + " are " + formatGamesBack(data.games_back) + " in the " + getLeague(data.conference) + " " + getDivision(data.division) + ". They are in " + data.ordinal_rank + " place, with a record of " + data.won + " and " + data.lost + ". ";
-    else return "The " + data.first_name + " " + data.last_name + " are currently in first place in the " + getLeague(data.conference) + " " + getDivision(data.division) + ", with a record of " + data.won + " and " + data.lost + ". The " + secondPlace.first_name + " " + secondPlace.last_name + " are " + formatGamesBack(secondPlace.games_back) + ", in second place. ";
+    else
+    {
+        var speechText = "The " + data.first_name + " " + data.last_name + " are currently in first place in the " + getLeague(data.conference) + " " + getDivision(data.division) + ", with a record of " + data.won + " and " + data.lost + ".";
+        if (secondPlace.rank === 1) speechText += " The " + secondPlace.first_name + " " + secondPlace.last_name + " are tied with the " + data.last_name + ", and also in first place. ";
+        else if (secondPlace.rank === 2) speechText += " The " + secondPlace.first_name + " " + secondPlace.last_name + " are in second place, " + formatGamesBack(secondPlace.games_back) + " behind the " + data.last_name + ". ";
+        return speechText;
+    }
 }
 
 function formatGamesBack(gamesBack)
 {
     if (gamesBack === 0.5) return "a half game back";
     else if (gamesBack.toString().includes(".5")) return gamesBack.toString().replace(".5", " and a half games back");
+    else if (gamesBack === 1) return " one game back"
     else return gamesBack + " games back";
 }
 
